@@ -7,5 +7,5 @@ export default defineConfig({
     react(),
     tailwindcss(), // เพิ่มบรรทัดนี้
   ],
-  base: '/show-case/',
+  base: '/show_case/',
 })
