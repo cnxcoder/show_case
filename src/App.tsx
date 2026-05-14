@@ -1,123 +1,115 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from './assets/vite.svg'
-import heroImg from './assets/hero.png'
+import { useEffect, useState } from 'react'
 import './App.css'
 
-const iconHref = (id: string) => `${import.meta.env.BASE_URL}icons.svg#${id}`
+type GameItem = {
+  title: string
+  description: string
+  url: string
+  imageUrl: string
+}
+
+type GamesResponse = {
+  games: GameItem[]
+}
+
+const withBaseUrl = (path: string) => {
+  if (/^https?:\/\//i.test(path)) {
+    return path
+  }
+
+  const base = import.meta.env.BASE_URL.endsWith('/')
+    ? import.meta.env.BASE_URL
+    : `${import.meta.env.BASE_URL}/`
+
+  return `${base}${path.replace(/^\//, '')}`
+}
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [games, setGames] = useState<GameItem[]>([])
+  const [isLoading, setIsLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
+
+  useEffect(() => {
+    let isMounted = true
+
+    const loadGames = async () => {
+      try {
+        const response = await fetch(withBaseUrl('games.json'), {
+          headers: { Accept: 'application/json' },
+        })
+
+        if (!response.ok) {
+          throw new Error(`Cannot load games.json (${response.status})`)
+        }
+
+        const data = (await response.json()) as GamesResponse
+
+        if (!Array.isArray(data.games)) {
+          throw new Error('games.json must contain a games array')
+        }
+
+        if (isMounted) {
+          setGames(data.games)
+        }
+      } catch (err) {
+        if (isMounted) {
+          setError(err instanceof Error ? err.message : 'Cannot load games')
+        }
+      } finally {
+        if (isMounted) {
+          setIsLoading(false)
+        }
+      }
+    }
+
+    void loadGames()
+
+    return () => {
+      isMounted = false
+    }
+  }, [])
 
   return (
-    <>
-      <section id="center">
-        <div className="hero">
-          <img src={heroImg} className="base" width="170" height="179" alt="" />
-          <img src={reactLogo} className="framework" alt="React logo" />
-          <img src={viteLogo} className="vite" alt="Vite logo" />
-        </div>
-        <div>
-          <h1>Get started</h1>
-          <p>
-            Edit <code>src/App.tsx</code> and save to test <code>HMR</code>
-          </p>
-        </div>
-        <button
-          type="button"
-          className="counter"
-          onClick={() => setCount((count) => count + 1)}
-        >
-          Count is {count}
-        </button>
+    <main className="home-shell">
+      <section className="hero-section" aria-labelledby="home-title">
+        <p className="eyebrow">CNX Coder Game Showcase</p>
+        <h1 id="home-title">Play the latest builds</h1>
+        <p className="hero-copy">
+          A lightweight home page for playable web game prototypes. The game list
+          is loaded from <code>public/games.json</code>, so new games can be added
+          without changing React code.
+        </p>
       </section>
 
-      <div className="ticks"></div>
+      <section className="games-section" aria-labelledby="games-title">
+        <div className="section-heading">
+          <h2 id="games-title">Games</h2>
+          <span>{isLoading ? 'Loading…' : `${games.length} available`}</span>
+        </div>
 
-      <section id="next-steps">
-        <div id="docs">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href={iconHref('documentation-icon')}></use>
-          </svg>
-          <h2>Documentation</h2>
-          <p>Your questions, answered</p>
-          <ul>
-            <li>
-              <a href="https://vite.dev/" target="_blank">
-                <img className="logo" src={viteLogo} alt="" />
-                Explore Vite
-              </a>
-            </li>
-            <li>
-              <a href="https://react.dev/" target="_blank">
-                <img className="button-icon" src={reactLogo} alt="" />
-                Learn more
-              </a>
-            </li>
-          </ul>
-        </div>
-        <div id="social">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href={iconHref('social-icon')}></use>
-          </svg>
-          <h2>Connect with us</h2>
-          <p>Join the Vite community</p>
-          <ul>
-            <li>
-              <a href="https://github.com/vitejs/vite" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href={iconHref('github-icon')}></use>
-                </svg>
-                GitHub
-              </a>
-            </li>
-            <li>
-              <a href="https://chat.vite.dev/" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href={iconHref('discord-icon')}></use>
-                </svg>
-                Discord
-              </a>
-            </li>
-            <li>
-              <a href="https://x.com/vite_js" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href={iconHref('x-icon')}></use>
-                </svg>
-                X.com
-              </a>
-            </li>
-            <li>
-              <a href="https://bsky.app/profile/vite.dev" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href={iconHref('bluesky-icon')}></use>
-                </svg>
-                Bluesky
-              </a>
-            </li>
-          </ul>
-        </div>
+        {error ? <p className="state-message error">{error}</p> : null}
+        {isLoading ? <p className="state-message">Loading games…</p> : null}
+
+        {!isLoading && !error ? (
+          <div className="game-list">
+            {games.map((game) => (
+              <article className="game-card" key={`${game.title}-${game.url}`}>
+                <a className="game-image-link" href={withBaseUrl(game.url)}>
+                  <img src={withBaseUrl(game.imageUrl)} alt={`${game.title} screenshot`} />
+                </a>
+                <div className="game-content">
+                  <h3>{game.title}</h3>
+                  <p>{game.description}</p>
+                  <a className="play-button" href={withBaseUrl(game.url)}>
+                    Play game
+                  </a>
+                </div>
+              </article>
+            ))}
+          </div>
+        ) : null}
       </section>
-
-      <div className="ticks"></div>
-      <section id="spacer"></section>
-    </>
+    </main>
   )
 }
 

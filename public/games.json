@@ -1,0 +1,10 @@
+{
+  "games": [
+    {
+      "title": "Clockwork Crisis",
+      "description": "Cute colorful steampunk isometric puzzle adventure. Play as ChokChok, collect gears, avoid clockwork robots, and reach the exit.",
+      "url": "games/clockwork/",
+      "imageUrl": "images/clockwork-crisis-screenshot.png"
+    }
+  ]
+}
