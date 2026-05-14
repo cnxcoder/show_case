@@ -1,28 +1,8 @@
 import { useEffect, useState } from 'react'
+import { GameCard } from './components/GameCard'
+import { loadGames } from './lib/games'
+import type { GameItem } from './types/game'
 import './App.css'
-
-type GameItem = {
-  title: string
-  description: string
-  url: string
-  imageUrl: string
-}
-
-type GamesResponse = {
-  games: GameItem[]
-}
-
-const withBaseUrl = (path: string) => {
-  if (/^https?:\/\//i.test(path)) {
-    return path
-  }
-
-  const base = import.meta.env.BASE_URL.endsWith('/')
-    ? import.meta.env.BASE_URL
-    : `${import.meta.env.BASE_URL}/`
-
-  return `${base}${path.replace(/^\//, '')}`
-}
 
 function App() {
   const [games, setGames] = useState<GameItem[]>([])
@@ -32,24 +12,12 @@ function App() {
   useEffect(() => {
     let isMounted = true
 
-    const loadGames = async () => {
+    const loadGameList = async () => {
       try {
-        const response = await fetch(withBaseUrl('games.json'), {
-          headers: { Accept: 'application/json' },
-        })
-
-        if (!response.ok) {
-          throw new Error(`Cannot load games.json (${response.status})`)
-        }
-
-        const data = (await response.json()) as GamesResponse
-
-        if (!Array.isArray(data.games)) {
-          throw new Error('games.json must contain a games array')
-        }
+        const gameList = await loadGames()
 
         if (isMounted) {
-          setGames(data.games)
+          setGames(gameList)
         }
       } catch (err) {
         if (isMounted) {
@@ -62,7 +30,7 @@ function App() {
       }
     }
 
-    void loadGames()
+    void loadGameList()
 
     return () => {
       isMounted = false
@@ -93,18 +61,7 @@ function App() {
         {!isLoading && !error ? (
           <div className="game-list">
             {games.map((game) => (
-              <article className="game-card" key={`${game.title}-${game.url}`}>
-                <a className="game-image-link" href={withBaseUrl(game.url)}>
-                  <img src={withBaseUrl(game.imageUrl)} alt={`${game.title} screenshot`} />
-                </a>
-                <div className="game-content">
-                  <h3>{game.title}</h3>
-                  <p>{game.description}</p>
-                  <a className="play-button" href={withBaseUrl(game.url)}>
-                    Play game
-                  </a>
-                </div>
-              </article>
+              <GameCard game={game} key={`${game.title}-${game.url}`} />
             ))}
           </div>
         ) : null}
