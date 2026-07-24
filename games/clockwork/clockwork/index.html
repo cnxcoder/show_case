@@ -7,7 +7,79 @@
     <link rel="shortcut icon" href="TemplateData/favicon.ico">
     <link rel="stylesheet" href="TemplateData/style.css">
     <link rel="manifest" href="manifest.webmanifest">
-  </head>
+  <!-- CLOCKWORK_CRISIS_WEBGL_VERSIONING -->
+<script>
+(function () {
+  'use strict';
+
+  var embeddedVersion = '1.0-20260724032251';
+  var storageKey = 'clockwork-crisis-build-version';
+  var reloadGuardKey = 'clockwork-crisis-version-reload';
+
+  window.CLOCKWORK_CRISIS_BUILD_VERSION = embeddedVersion;
+  window.CLOCKWORK_CRISIS_CACHE_QUERY = '?v=' + encodeURIComponent(embeddedVersion);
+
+  function clearBrowserCacheStorage() {
+    if (!('caches' in window)) return Promise.resolve();
+    return caches.keys()
+      .then(function (keys) {
+        return Promise.all(keys.map(function (key) { return caches.delete(key); }));
+      })
+      .catch(function (error) {
+        console.warn('[CC Version] Cache Storage cleanup failed:', error);
+      });
+  }
+
+  function reloadForVersion(latestVersion) {
+    var guardValue = sessionStorage.getItem(reloadGuardKey);
+    if (guardValue === latestVersion) {
+      console.warn('[CC Version] Reload already attempted for', latestVersion);
+      return;
+    }
+
+    sessionStorage.setItem(reloadGuardKey, latestVersion);
+    localStorage.setItem(storageKey, latestVersion);
+
+    clearBrowserCacheStorage().finally(function () {
+      var url = new URL(window.location.href);
+      url.searchParams.set('v', latestVersion);
+      // Timestamp prevents a stale HTML response even when an intermediary
+      // cache incorrectly ignores the version query from a previous request.
+      url.searchParams.set('_cc_reload', Date.now().toString());
+      window.location.replace(url.toString());
+    });
+  }
+
+  fetch('./version.json?_cc=' + Date.now(), {
+    cache: 'no-store',
+    headers: { 'Cache-Control': 'no-cache' }
+  })
+    .then(function (response) {
+      if (!response.ok) throw new Error('HTTP ' + response.status);
+      return response.json();
+    })
+    .then(function (manifest) {
+      var latestVersion = manifest && manifest.version;
+      if (!latestVersion) throw new Error('version.json has no version');
+
+      localStorage.setItem(storageKey, latestVersion);
+
+      if (latestVersion !== embeddedVersion) {
+        console.log('[CC Version] New build detected:', embeddedVersion, '->', latestVersion);
+        reloadForVersion(latestVersion);
+        return;
+      }
+
+      sessionStorage.removeItem(reloadGuardKey);
+      console.log('[CC Version] Build is current:', embeddedVersion);
+    })
+    .catch(function (error) {
+      // Never block the game if version checking is unavailable.
+      console.warn('[CC Version] Version check failed; continuing current build.', error);
+    });
+})();
+</script>
+</head>
   <body>
     <div id="unity-container">
       <canvas id="unity-canvas" width=960 height=600 tabindex="-1"></canvas>
@@ -57,12 +129,12 @@
       }
 
       var buildUrl = "Build";
-      var loaderUrl = buildUrl + "/clockwork.loader.js";
+      var loaderUrl = buildUrl + "/clockwork.loader.js" + window.CLOCKWORK_CRISIS_CACHE_QUERY;
       var config = {
         arguments: [],
-        dataUrl: buildUrl + "/clockwork.data",
-        frameworkUrl: buildUrl + "/clockwork.framework.js",
-        codeUrl: buildUrl + "/clockwork.wasm",
+        dataUrl: buildUrl + "/clockwork.data" + window.CLOCKWORK_CRISIS_CACHE_QUERY,
+        frameworkUrl: buildUrl + "/clockwork.framework.js" + window.CLOCKWORK_CRISIS_CACHE_QUERY,
+        codeUrl: buildUrl + "/clockwork.wasm" + window.CLOCKWORK_CRISIS_CACHE_QUERY,
         streamingAssetsUrl: "StreamingAssets",
         companyName: "DefaultCompany",
         productName: "ClockworkCrisisUnity",
