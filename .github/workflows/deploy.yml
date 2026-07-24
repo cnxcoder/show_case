@@ -23,6 +23,24 @@ jobs:
           
       - run: npm ci
       - run: npm run build
+
+      - name: Generate Clockwork Crisis version
+        shell: bash
+        run: |
+          VERSION="${GITHUB_SHA::8}"
+          BUILD_TIME="$(date -u +"%Y-%m-%dT%H:%M:%SZ")"
+
+          cat > games/clockwork/version.json <<EOF
+          {
+            "version": "$VERSION",
+            "buildTime": "$BUILD_TIME",
+            "commit": "$GITHUB_SHA"
+          }
+          EOF
+
+          echo "Clockwork Crisis WebGL version: $VERSION"
+          cat games/clockwork/version.json
+
       - run: cp -r games dist/games
       
       - uses: actions/configure-pages@v5
