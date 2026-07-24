@@ -24,14 +24,56 @@
       </div>
     </div>
     <script>
-      var canvas = document.querySelector("#unity-canvas");
+      const VERSION_STORAGE_KEY = "clockwork-crisis-build-version";
 
-      // Shows a temporary message banner/ribbon for a few seconds, or
-      // a permanent error message on top of the canvas if type=='error'.
-      // If type=='warning', a yellow highlight color is used.
-      // Modify or remove this function to customize the visually presented
-      // way that non-critical warnings and error messages are presented to the
-      // user.
+      async function getBuildVersion() {
+        try {
+          const response = await fetch(
+            "./version.json?t=" + Date.now(),
+            { cache: "no-store" }
+          );
+
+          if (!response.ok) {
+            throw new Error("version.json HTTP " + response.status);
+          }
+
+          const manifest = await response.json();
+          const latestVersion = String(manifest.version || "").trim();
+
+          if (!latestVersion) {
+            throw new Error("version.json has no version");
+          }
+
+          const previousVersion = localStorage.getItem(VERSION_STORAGE_KEY);
+          const pageVersion = new URL(window.location.href).searchParams.get("v");
+
+          localStorage.setItem(VERSION_STORAGE_KEY, latestVersion);
+
+          // If this tab was opened from an older deployment, force one clean navigation.
+          if (previousVersion && previousVersion !== latestVersion && pageVersion !== latestVersion) {
+            if ("caches" in window) {
+              try {
+                const keys = await caches.keys();
+                await Promise.all(keys.map((key) => caches.delete(key)));
+              } catch (cacheError) {
+                console.warn("[VERSION] Cache Storage cleanup failed:", cacheError);
+              }
+            }
+
+            const url = new URL(window.location.href);
+            url.searchParams.set("v", latestVersion);
+            window.location.replace(url.toString());
+            return null;
+          }
+
+          return latestVersion;
+        } catch (error) {
+          console.warn("[VERSION] Version check failed:", error);
+          // Fallback still prevents stale build files within the current navigation.
+          return Date.now().toString();
+        }
+      }
+
       function unityShowBanner(msg, type) {
         var warningBanner = document.querySelector("#unity-warning");
         function updateBannerVisibility() {
@@ -51,83 +93,62 @@
         updateBannerVisibility();
       }
 
-      var buildUrl = "Build";
-      var loaderUrl = buildUrl + "/clockwork.loader.js";
-      var config = {
-        arguments: [],
-        dataUrl: buildUrl + "/clockwork.data",
-        frameworkUrl: buildUrl + "/clockwork.framework.js",
-        codeUrl: buildUrl + "/clockwork.wasm",
-        streamingAssetsUrl: "StreamingAssets",
-        companyName: "DefaultCompany",
-        productName: "ClockworkCrisisUnity",
-        productVersion: "1.0",
-        showBanner: unityShowBanner,
-        // errorHandler: function(err, url, line) {
-        //    alert("error " + err + " occurred at line " + line);
-        //    // Return 'true' if you handled this error and don't want Unity
-        //    // to process it further, 'false' otherwise.
-        //    return true;
-        // },
-      };
+      async function bootUnity() {
+        const buildVersion = await getBuildVersion();
+        if (buildVersion === null) {
+          return;
+        }
 
-      // By default, Unity keeps WebGL canvas render target size matched with
-      // the DOM size of the canvas element (scaled by window.devicePixelRatio)
-      // Set this to false if you want to decouple this synchronization from
-      // happening inside the engine, and you would instead like to size up
-      // the canvas DOM size and WebGL render target sizes yourself.
-      // config.matchWebGLToCanvasSize = false;
+        var canvas = document.querySelector("#unity-canvas");
+        var buildUrl = "Build";
+        var versionQuery = "?v=" + encodeURIComponent(buildVersion);
+        var loaderUrl = buildUrl + "/clockwork.loader.js" + versionQuery;
 
-      // If you would like all file writes inside Unity Application.persistentDataPath
-      // directory to automatically persist so that the contents are remembered when
-      // the user revisits the site the next time, uncomment the following line:
-      // config.autoSyncPersistentDataPath = true;
-      // This autosyncing is currently not the default behavior to avoid regressing
-      // existing user projects that might rely on the earlier manual
-      // JS_FileSystem_Sync() behavior, but in future Unity version, this will be
-      // expected to change.
+        var config = {
+          arguments: [],
+          dataUrl: buildUrl + "/clockwork.data" + versionQuery,
+          frameworkUrl: buildUrl + "/clockwork.framework.js" + versionQuery,
+          codeUrl: buildUrl + "/clockwork.wasm" + versionQuery,
+          streamingAssetsUrl: "StreamingAssets",
+          companyName: "DefaultCompany",
+          productName: "ClockworkCrisisUnity",
+          productVersion: buildVersion,
+          showBanner: unityShowBanner,
+        };
 
-      if (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)) {
-        // Mobile device style: fill the whole browser client area with the game canvas:
+        if (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)) {
+          var meta = document.createElement('meta');
+          meta.name = 'viewport';
+          meta.content = 'width=device-width, height=device-height, initial-scale=1.0, user-scalable=no, shrink-to-fit=yes';
+          document.getElementsByTagName('head')[0].appendChild(meta);
+          document.querySelector("#unity-container").className = "unity-mobile";
+          canvas.className = "unity-mobile";
+        } else {
+          canvas.style.width = "960px";
+          canvas.style.height = "600px";
+        }
 
-        var meta = document.createElement('meta');
-        meta.name = 'viewport';
-        meta.content = 'width=device-width, height=device-height, initial-scale=1.0, user-scalable=no, shrink-to-fit=yes';
-        document.getElementsByTagName('head')[0].appendChild(meta);
-        document.querySelector("#unity-container").className = "unity-mobile";
-        canvas.className = "unity-mobile";
+        document.querySelector("#unity-loading-bar").style.display = "block";
 
-        // To lower canvas resolution on mobile devices to gain some
-        // performance, uncomment the following line:
-        // config.devicePixelRatio = 1;
+        var script = document.createElement("script");
+        script.src = loaderUrl;
+        script.onload = () => {
+          createUnityInstance(canvas, config, (progress) => {
+            document.querySelector("#unity-progress-bar-full").style.width = 100 * progress + "%";
+          }).then((unityInstance) => {
+            document.querySelector("#unity-loading-bar").style.display = "none";
+            document.querySelector("#unity-fullscreen-button").onclick = () => {
+              unityInstance.SetFullscreen(1);
+            };
+          }).catch((message) => {
+            alert(message);
+          });
+        };
 
-
-      } else {
-        // Desktop style: Render the game canvas in a window that can be maximized to fullscreen:
-        canvas.style.width = "960px";
-        canvas.style.height = "600px";
+        document.body.appendChild(script);
       }
 
-      document.querySelector("#unity-loading-bar").style.display = "block";
-
-      var script = document.createElement("script");
-      script.src = loaderUrl;
-      script.onload = () => {
-        createUnityInstance(canvas, config, (progress) => {
-          document.querySelector("#unity-progress-bar-full").style.width = 100 * progress + "%";
-              }).then((unityInstance) => {
-                document.querySelector("#unity-loading-bar").style.display = "none";
-                document.querySelector("#unity-fullscreen-button").onclick = () => {
-                  unityInstance.SetFullscreen(1);
-                };
-
-              }).catch((message) => {
-                alert(message);
-              });
-            };
-
-      document.body.appendChild(script);
-
+      bootUnity();
     </script>
   </body>
 </html>

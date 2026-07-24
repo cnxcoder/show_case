@@ -1,47 +1,21 @@
-# Game Showcase
+# Clockwork Crisis WebGL version patch
 
-React + Vite home page for playable web game builds.
+Replace:
+- games/clockwork/index.html
 
-## Structure
+Add:
+- games/clockwork/version.json
 
-```text
-src/
-  App.tsx                 # Home page composition
-  components/GameCard.tsx # Reusable game card
-  lib/games.ts            # Runtime loader for public/games.json
-  lib/url.ts              # Vite base-path URL helper
-  types/game.ts           # Shared game data types
-public/
-  games.json              # Editable game catalog
-  images/                 # Showcase thumbnails
-games/
-  clockwork/              # Unity WebGL build served by the game catalog
-```
+For each new WebGL deployment, update `version` in version.json.
+Recommended format:
+YYYY.MM.DD.BUILD
 
-## Game list
+Example:
+2026.07.24.2
 
-The home page loads `public/games.json` at runtime.
-
-```json
-{
-  "games": [
-    {
-      "title": "Clockwork Crisis",
-      "description": "Cute colorful steampunk isometric puzzle adventure.",
-      "url": "games/clockwork/",
-      "imageUrl": "images/clockwork-crisis-screenshot.png"
-    }
-  ]
-}
-```
-
-`url` and `imageUrl` can be relative to the deployed Vite base path, or absolute `https://` URLs.
-
-## Scripts
-
-```bash
-npm run dev
-npm run lint
-npm run build
-npm run preview
-```
+The patched index.html:
+- fetches version.json using `cache: no-store`
+- detects a newly deployed version
+- clears Cache Storage only (not IndexedDB/save data)
+- reloads once with `?v=<version>`
+- appends the same version query to loader/data/framework/wasm
