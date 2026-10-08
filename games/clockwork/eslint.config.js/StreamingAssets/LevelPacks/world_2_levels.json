@@ -1,0 +1,1018 @@
+{
+  "game": "clockwork_crisis",
+  "schema_version": "playable_gdd_v5_0",
+  "summary": {
+    "export_target": "unity",
+    "source": "world_2_pr1_test_pack",
+    "sort": "stage_order",
+    "levels": "2-1..2-6",
+    "exported": 6,
+    "strip_replay": false,
+    "hint_source": "three_star"
+  },
+  "levels": [
+    {
+      "id": "world_2_stage_01",
+      "schema_version": "playable_gdd_v5_0",
+      "level_no": 1,
+      "maze": {
+        "cols": 7,
+        "rows": 7
+      },
+      "player": {
+        "start": {
+          "x": 1,
+          "y": 5
+        }
+      },
+      "exit": {
+        "position": {
+          "x": 6,
+          "y": 2
+        },
+        "requires_gears": 1,
+        "required_gear_ids": [
+          "gear_req_01"
+        ]
+      },
+      "gears": [
+        {
+          "id": "gear_req_01",
+          "kind": "required",
+          "required": true,
+          "position": {
+            "x": 1,
+            "y": 3
+          }
+        },
+        {
+          "id": "gear_opt_01",
+          "kind": "optional",
+          "required": false,
+          "position": {
+            "x": 5,
+            "y": 6
+          }
+        }
+      ],
+      "blocked": [],
+      "walls": [
+        {
+          "x": 2,
+          "y": 4,
+          "dir": "right"
+        },
+        {
+          "x": 1,
+          "y": 5,
+          "dir": "down"
+        },
+        {
+          "x": 5,
+          "y": 3,
+          "dir": "down"
+        },
+        {
+          "x": 1,
+          "y": 3,
+          "dir": "right"
+        },
+        {
+          "x": 3,
+          "y": 2,
+          "dir": "down"
+        },
+        {
+          "x": 5,
+          "y": 6,
+          "dir": "right"
+        }
+      ],
+      "enemies": [
+        {
+          "id": "tin_01",
+          "type": "tin_walker",
+          "behavior": "basic_chase",
+          "position": {
+            "x": 4,
+            "y": 0
+          },
+          "move_interval": 1,
+          "tie_breaker": [
+            "left",
+            "up",
+            "right",
+            "down"
+          ]
+        }
+      ],
+      "turn_order": [
+        "tin_01"
+      ],
+      "traps": [],
+      "solutions": {
+        "normal": {
+          "moves": [
+            "U",
+            "U",
+            "U",
+            "R",
+            "R",
+            "R",
+            "R",
+            "R"
+          ],
+          "move_length": 8
+        },
+        "three_star": {
+          "moves": [
+            "U",
+            "U",
+            "D",
+            "D",
+            "L",
+            "D",
+            "R",
+            "R",
+            "R",
+            "R",
+            "R",
+            "U",
+            "U",
+            "R",
+            "U",
+            "U"
+          ],
+          "move_length": 16
+        }
+      },
+      "difficulty": {
+        "band": "easy",
+        "final_score": 1
+      },
+      "star_conditions": {
+        "par_moves_3_star": 16,
+        "par_moves_2_star": 20
+      },
+      "metadata": {
+        "template": "optional_route",
+        "stage_index": 0,
+        "stage_order": 1,
+        "world_id": "world_2",
+        "world_name": "Gear Hall",
+        "world_no": 2,
+        "stage_no": 1,
+        "campaign_id": "main",
+        "generator_preset": "world_2_pr1"
+      }
+    },
+    {
+      "id": "world_2_stage_02",
+      "schema_version": "playable_gdd_v5_0",
+      "level_no": 2,
+      "maze": {
+        "cols": 7,
+        "rows": 7
+      },
+      "player": {
+        "start": {
+          "x": 6,
+          "y": 1
+        }
+      },
+      "exit": {
+        "position": {
+          "x": 1,
+          "y": 4
+        },
+        "requires_gears": 1,
+        "required_gear_ids": [
+          "gear_req_01"
+        ]
+      },
+      "gears": [
+        {
+          "id": "gear_req_01",
+          "kind": "required",
+          "required": true,
+          "position": {
+            "x": 3,
+            "y": 1
+          }
+        },
+        {
+          "id": "gear_opt_01",
+          "kind": "optional",
+          "required": false,
+          "position": {
+            "x": 0,
+            "y": 1
+          }
+        }
+      ],
+      "blocked": [],
+      "walls": [
+        {
+          "x": 0,
+          "y": 3,
+          "dir": "down"
+        },
+        {
+          "x": 2,
+          "y": 1,
+          "dir": "down"
+        },
+        {
+          "x": 6,
+          "y": 1,
+          "dir": "down"
+        },
+        {
+          "x": 1,
+          "y": 3,
+          "dir": "down"
+        },
+        {
+          "x": 1,
+          "y": 0,
+          "dir": "right"
+        },
+        {
+          "x": 1,
+          "y": 6,
+          "dir": "right"
+        }
+      ],
+      "enemies": [
+        {
+          "id": "tin_01",
+          "type": "tin_walker",
+          "behavior": "basic_chase",
+          "position": {
+            "x": 6,
+            "y": 0
+          },
+          "move_interval": 1,
+          "tie_breaker": [
+            "left",
+            "up",
+            "right",
+            "down"
+          ]
+        }
+      ],
+      "turn_order": [
+        "tin_01"
+      ],
+      "traps": [],
+      "solutions": {
+        "normal": {
+          "moves": [
+            "L",
+            "L",
+            "L",
+            "D",
+            "D",
+            "D",
+            "L",
+            "L"
+          ],
+          "move_length": 8
+        },
+        "three_star": {
+          "moves": [
+            "L",
+            "L",
+            "L",
+            "L",
+            "L",
+            "L",
+            "D",
+            "R",
+            "R",
+            "D",
+            "D",
+            "L"
+          ],
+          "move_length": 12
+        }
+      },
+      "difficulty": {
+        "band": "easy",
+        "final_score": 2
+      },
+      "star_conditions": {
+        "par_moves_3_star": 12,
+        "par_moves_2_star": 16
+      },
+      "metadata": {
+        "template": "dead_end_gear",
+        "stage_index": 1,
+        "stage_order": 2,
+        "world_id": "world_2",
+        "world_name": "Gear Hall",
+        "world_no": 2,
+        "stage_no": 2,
+        "campaign_id": "main",
+        "generator_preset": "world_2_pr1"
+      }
+    },
+    {
+      "id": "world_2_stage_03",
+      "schema_version": "playable_gdd_v5_0",
+      "level_no": 3,
+      "maze": {
+        "cols": 7,
+        "rows": 7
+      },
+      "player": {
+        "start": {
+          "x": 3,
+          "y": 0
+        }
+      },
+      "exit": {
+        "position": {
+          "x": 0,
+          "y": 3
+        },
+        "requires_gears": 1,
+        "required_gear_ids": [
+          "gear_req_01"
+        ]
+      },
+      "gears": [
+        {
+          "id": "gear_req_01",
+          "kind": "required",
+          "required": true,
+          "position": {
+            "x": 3,
+            "y": 6
+          }
+        },
+        {
+          "id": "gear_opt_01",
+          "kind": "optional",
+          "required": false,
+          "position": {
+            "x": 2,
+            "y": 6
+          }
+        }
+      ],
+      "blocked": [],
+      "walls": [
+        {
+          "x": 0,
+          "y": 3,
+          "dir": "right"
+        },
+        {
+          "x": 1,
+          "y": 0,
+          "dir": "right"
+        },
+        {
+          "x": 5,
+          "y": 0,
+          "dir": "down"
+        },
+        {
+          "x": 3,
+          "y": 0,
+          "dir": "right"
+        },
+        {
+          "x": 1,
+          "y": 4,
+          "dir": "right"
+        },
+        {
+          "x": 0,
+          "y": 6,
+          "dir": "right"
+        },
+        {
+          "x": 1,
+          "y": 2,
+          "dir": "down"
+        },
+        {
+          "x": 4,
+          "y": 1,
+          "dir": "down"
+        }
+      ],
+      "enemies": [
+        {
+          "id": "guard_01",
+          "type": "gear_guard",
+          "behavior": "patrol_then_chase",
+          "position": {
+            "x": 1,
+            "y": 4
+          },
+          "move_interval": 1,
+          "patrol_mode": "ping_pong",
+          "patrol": [
+            {
+              "x": 1,
+              "y": 4
+            },
+            {
+              "x": 1,
+              "y": 5
+            },
+            {
+              "x": 1,
+              "y": 6
+            }
+          ]
+        }
+      ],
+      "turn_order": [
+        "guard_01"
+      ],
+      "traps": [],
+      "solutions": {
+        "normal": {
+          "moves": [
+            "D",
+            "D",
+            "D",
+            "D",
+            "D",
+            "D",
+            "U",
+            "U",
+            "U",
+            "U",
+            "L",
+            "L",
+            "L",
+            "D"
+          ],
+          "move_length": 14
+        },
+        "three_star": {
+          "moves": [
+            "D",
+            "U",
+            "D",
+            "D",
+            "D",
+            "D",
+            "D",
+            "D",
+            "L",
+            "R",
+            "U",
+            "U",
+            "U",
+            "U",
+            "L",
+            "L",
+            "L",
+            "D"
+          ],
+          "move_length": 18
+        }
+      },
+      "difficulty": {
+        "band": "hard",
+        "final_score": 41.87
+      },
+      "star_conditions": {
+        "par_moves_3_star": 18,
+        "par_moves_2_star": 22
+      },
+      "metadata": {
+        "template": "patrol_intro",
+        "stage_index": 2,
+        "stage_order": 3,
+        "world_id": "world_2",
+        "world_name": "Gear Hall",
+        "world_no": 2,
+        "stage_no": 3,
+        "campaign_id": "main",
+        "generator_preset": "world_2_pr1"
+      }
+    },
+    {
+      "id": "world_2_stage_04",
+      "schema_version": "playable_gdd_v5_0",
+      "level_no": 4,
+      "maze": {
+        "cols": 8,
+        "rows": 8
+      },
+      "player": {
+        "start": {
+          "x": 5,
+          "y": 0
+        }
+      },
+      "exit": {
+        "position": {
+          "x": 6,
+          "y": 3
+        },
+        "requires_gears": 1,
+        "required_gear_ids": [
+          "gear_req_01"
+        ]
+      },
+      "gears": [
+        {
+          "id": "gear_req_01",
+          "kind": "required",
+          "required": true,
+          "position": {
+            "x": 4,
+            "y": 1
+          }
+        },
+        {
+          "id": "gear_opt_01",
+          "kind": "optional",
+          "required": false,
+          "position": {
+            "x": 3,
+            "y": 1
+          }
+        }
+      ],
+      "blocked": [],
+      "walls": [
+        {
+          "x": 2,
+          "y": 2,
+          "dir": "right"
+        },
+        {
+          "x": 2,
+          "y": 5,
+          "dir": "right"
+        },
+        {
+          "x": 6,
+          "y": 6,
+          "dir": "down"
+        },
+        {
+          "x": 3,
+          "y": 1,
+          "dir": "down"
+        },
+        {
+          "x": 0,
+          "y": 5,
+          "dir": "down"
+        },
+        {
+          "x": 3,
+          "y": 5,
+          "dir": "right"
+        }
+      ],
+      "enemies": [
+        {
+          "id": "guard_01",
+          "type": "gear_guard",
+          "behavior": "patrol_then_chase",
+          "position": {
+            "x": 4,
+            "y": 2
+          },
+          "move_interval": 1,
+          "patrol_mode": "ping_pong",
+          "patrol": [
+            {
+              "x": 4,
+              "y": 2
+            },
+            {
+              "x": 5,
+              "y": 2
+            },
+            {
+              "x": 6,
+              "y": 2
+            }
+          ]
+        }
+      ],
+      "turn_order": [
+        "guard_01"
+      ],
+      "traps": [],
+      "solutions": {
+        "normal": {
+          "moves": [
+            "D",
+            "L",
+            "R",
+            "R",
+            "D",
+            "D"
+          ],
+          "move_length": 6
+        },
+        "three_star": {
+          "moves": [
+            "R",
+            "D",
+            "L",
+            "L",
+            "L",
+            "R",
+            "R",
+            "R",
+            "D",
+            "D"
+          ],
+          "move_length": 10
+        }
+      },
+      "difficulty": {
+        "band": "normal",
+        "final_score": 35.52
+      },
+      "star_conditions": {
+        "par_moves_3_star": 10,
+        "par_moves_2_star": 14
+      },
+      "metadata": {
+        "template": "patrol_routing",
+        "stage_index": 3,
+        "stage_order": 4,
+        "world_id": "world_2",
+        "world_name": "Gear Hall",
+        "world_no": 2,
+        "stage_no": 4,
+        "campaign_id": "main",
+        "generator_preset": "world_2_pr1"
+      }
+    },
+    {
+      "id": "world_2_stage_05",
+      "schema_version": "playable_gdd_v5_0",
+      "level_no": 5,
+      "maze": {
+        "cols": 8,
+        "rows": 8
+      },
+      "player": {
+        "start": {
+          "x": 2,
+          "y": 2
+        }
+      },
+      "exit": {
+        "position": {
+          "x": 6,
+          "y": 2
+        },
+        "requires_gears": 1,
+        "required_gear_ids": [
+          "gear_req_01"
+        ]
+      },
+      "gears": [
+        {
+          "id": "gear_req_01",
+          "kind": "required",
+          "required": true,
+          "position": {
+            "x": 0,
+            "y": 2
+          }
+        },
+        {
+          "id": "gear_opt_01",
+          "kind": "optional",
+          "required": false,
+          "position": {
+            "x": 4,
+            "y": 5
+          }
+        }
+      ],
+      "blocked": [],
+      "walls": [
+        {
+          "x": 2,
+          "y": 3,
+          "dir": "down"
+        },
+        {
+          "x": 0,
+          "y": 5,
+          "dir": "down"
+        },
+        {
+          "x": 6,
+          "y": 2,
+          "dir": "right"
+        },
+        {
+          "x": 2,
+          "y": 7,
+          "dir": "right"
+        },
+        {
+          "x": 1,
+          "y": 6,
+          "dir": "down"
+        },
+        {
+          "x": 0,
+          "y": 7,
+          "dir": "right"
+        },
+        {
+          "x": 1,
+          "y": 2,
+          "dir": "right"
+        },
+        {
+          "x": 7,
+          "y": 2,
+          "dir": "down"
+        },
+        {
+          "x": 4,
+          "y": 3,
+          "dir": "right"
+        }
+      ],
+      "enemies": [
+        {
+          "id": "guard_01",
+          "type": "gear_guard",
+          "behavior": "patrol_then_chase",
+          "position": {
+            "x": 0,
+            "y": 1
+          },
+          "move_interval": 1,
+          "patrol_mode": "ping_pong",
+          "patrol": [
+            {
+              "x": 0,
+              "y": 1
+            },
+            {
+              "x": 1,
+              "y": 1
+            },
+            {
+              "x": 2,
+              "y": 1
+            }
+          ]
+        }
+      ],
+      "turn_order": [
+        "guard_01"
+      ],
+      "traps": [],
+      "solutions": {
+        "normal": {
+          "moves": [
+            "D",
+            "L",
+            "U",
+            "L",
+            "R",
+            "D",
+            "R",
+            "U",
+            "R",
+            "R",
+            "R",
+            "R"
+          ],
+          "move_length": 12
+        },
+        "three_star": {
+          "moves": [
+            "D",
+            "L",
+            "U",
+            "L",
+            "R",
+            "D",
+            "R",
+            "R",
+            "R",
+            "D",
+            "D",
+            "U",
+            "U",
+            "U",
+            "R",
+            "R"
+          ],
+          "move_length": 16
+        }
+      },
+      "difficulty": {
+        "band": "normal",
+        "final_score": 37.42
+      },
+      "star_conditions": {
+        "par_moves_3_star": 16,
+        "par_moves_2_star": 20
+      },
+      "metadata": {
+        "template": "guarded_optional",
+        "stage_index": 4,
+        "stage_order": 5,
+        "world_id": "world_2",
+        "world_name": "Gear Hall",
+        "world_no": 2,
+        "stage_no": 5,
+        "campaign_id": "main",
+        "generator_preset": "world_2_pr1"
+      }
+    },
+    {
+      "id": "world_2_stage_06",
+      "schema_version": "playable_gdd_v5_0",
+      "level_no": 6,
+      "maze": {
+        "cols": 8,
+        "rows": 8
+      },
+      "player": {
+        "start": {
+          "x": 4,
+          "y": 6
+        }
+      },
+      "exit": {
+        "position": {
+          "x": 4,
+          "y": 3
+        },
+        "requires_gears": 1,
+        "required_gear_ids": [
+          "gear_req_01"
+        ]
+      },
+      "gears": [
+        {
+          "id": "gear_req_01",
+          "kind": "required",
+          "required": true,
+          "position": {
+            "x": 0,
+            "y": 5
+          }
+        },
+        {
+          "id": "gear_opt_01",
+          "kind": "optional",
+          "required": false,
+          "position": {
+            "x": 2,
+            "y": 6
+          }
+        }
+      ],
+      "blocked": [],
+      "walls": [
+        {
+          "x": 2,
+          "y": 1,
+          "dir": "right"
+        },
+        {
+          "x": 4,
+          "y": 2,
+          "dir": "down"
+        },
+        {
+          "x": 2,
+          "y": 5,
+          "dir": "down"
+        },
+        {
+          "x": 1,
+          "y": 6,
+          "dir": "down"
+        },
+        {
+          "x": 5,
+          "y": 0,
+          "dir": "right"
+        }
+      ],
+      "enemies": [
+        {
+          "id": "tin_01",
+          "type": "tin_walker",
+          "behavior": "basic_chase",
+          "position": {
+            "x": 0,
+            "y": 0
+          },
+          "move_interval": 1,
+          "tie_breaker": [
+            "left",
+            "up",
+            "right",
+            "down"
+          ]
+        },
+        {
+          "id": "guard_02",
+          "type": "gear_guard",
+          "behavior": "patrol_then_chase",
+          "position": {
+            "x": 5,
+            "y": 2
+          },
+          "move_interval": 1,
+          "patrol_mode": "ping_pong",
+          "patrol": [
+            {
+              "x": 5,
+              "y": 2
+            },
+            {
+              "x": 6,
+              "y": 2
+            },
+            {
+              "x": 7,
+              "y": 2
+            }
+          ]
+        }
+      ],
+      "turn_order": [
+        "tin_01",
+        "guard_02"
+      ],
+      "traps": [],
+      "solutions": {
+        "normal": {
+          "moves": [
+            "U",
+            "L",
+            "L",
+            "L",
+            "L",
+            "U",
+            "R",
+            "R",
+            "R",
+            "R",
+            "U"
+          ],
+          "move_length": 11
+        },
+        "three_star": {
+          "moves": [
+            "U",
+            "D",
+            "L",
+            "L",
+            "L",
+            "U",
+            "L",
+            "U",
+            "R",
+            "R",
+            "R",
+            "R",
+            "U"
+          ],
+          "move_length": 13
+        }
+      },
+      "difficulty": {
+        "band": "normal",
+        "final_score": 31.04
+      },
+      "star_conditions": {
+        "par_moves_3_star": 13,
+        "par_moves_2_star": 17
+      },
+      "metadata": {
+        "template": "mixed_enemy",
+        "stage_index": 5,
+        "stage_order": 6,
+        "world_id": "world_2",
+        "world_name": "Gear Hall",
+        "world_no": 2,
+        "stage_no": 6,
+        "campaign_id": "main",
+        "generator_preset": "world_2_pr1"
+      }
+    }
+  ]
+}
