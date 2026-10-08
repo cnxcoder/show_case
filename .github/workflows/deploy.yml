@@ -14,23 +14,37 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v5  # อัพจาก v4 -> v5
-      
-      - uses: actions/setup-node@v5  # อัพจาก v4 -> v5
+      - uses: actions/checkout@v5
+
+      - uses: actions/setup-node@v5
         with:
           node-version: 20
           cache: 'npm'
-          
+
       - run: npm ci
       - run: npm run build
 
-      - name: Generate Clockwork Crisis version
+      # Current newest Unity WebGL build is under this accidentally nested folder.
+      # Publish it as /games/clockwork/ on GitHub Pages.
+      - name: Publish latest Clockwork WebGL build
         shell: bash
         run: |
+          set -euxo pipefail
+
+          SOURCE_DIR="games/clockwork/eslint.config.js"
+          TARGET_DIR="dist/games/clockwork"
+
+          test -f "$SOURCE_DIR/index.html"
+          test -d "$SOURCE_DIR/Build"
+
+          rm -rf "$TARGET_DIR"
+          mkdir -p "$TARGET_DIR"
+          cp -a "$SOURCE_DIR/." "$TARGET_DIR/"
+
           VERSION="${GITHUB_SHA::8}"
           BUILD_TIME="$(date -u +"%Y-%m-%dT%H:%M:%SZ")"
 
-          cat > games/clockwork/version.json <<EOF
+          cat > "$TARGET_DIR/version.json" <<EOF
           {
             "version": "$VERSION",
             "buildTime": "$BUILD_TIME",
@@ -38,16 +52,16 @@ jobs:
           }
           EOF
 
-          echo "Clockwork Crisis WebGL version: $VERSION"
-          cat games/clockwork/version.json
+          echo "Published Clockwork source: $SOURCE_DIR"
+          echo "Published version: $VERSION"
+          find "$TARGET_DIR" -maxdepth 2 -type f | sort
 
-      - run: cp -r games dist/games
-      
       - uses: actions/configure-pages@v5
+
       - uses: actions/upload-pages-artifact@v3
         with:
-          path: 'dist'
-          
+          path: dist
+
   deploy:
     needs: build
     runs-on: ubuntu-latest
